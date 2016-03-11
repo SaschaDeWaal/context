@@ -28,14 +28,14 @@ public class playerAction : MonoBehaviour {
 
 		//find closed action
 		foreach(action act in actions){
-			if (Vector3.Distance (transform.position, act.transform.position) < distance) {
+			if (Vector2.Distance (new Vector2(transform.position.x, transform.position.y), new Vector2(act.transform.position.x, act.transform.position.y)) < distance) {
 				distance = Vector3.Distance (transform.position, act.transform.position);
 				closedAction = act;
 			}
 		}
 
 		//doAction
-		if (closedAction != null && distance < maxActionDistance) {
+		if (closedAction != null) {
 			closedAction.Run (playerIndex, distance, gameObject);
 		}
 	}

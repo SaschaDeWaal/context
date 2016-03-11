@@ -6,12 +6,14 @@ public class stone : action {
 
 	public int hits = 0;
 	public GameObject ui;
+	public AudioClip[] audio;
 
 	private bool createdObject = false;
 	private Vector3 orginalPos;
 
 	const int minHitRange = 10;
 	const int maxHitRange = 40;
+	const int pay = 1;
 
 	void Start () {
 
@@ -25,14 +27,9 @@ public class stone : action {
 		float randomColor = Random.Range (0.4f, 1f);
 		GetComponent<SpriteRenderer> ().color = new Color (randomColor, randomColor, randomColor);
 
-		//turn
-		transform.eulerAngles = new Vector3(0,0,Random.Range(0,360));
-	
-		//mirror
-		int mirror = Random.Range(0,4);
-		if (mirror == 0) transform.localScale = new Vector3(transform.localScale.x*-1, transform.localScale.y, transform.localScale.z);
-		if (mirror == 1) transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y*-1, transform.localScale.z);
-		if (mirror == 2) transform.localScale = new Vector3(transform.localScale.x*-1, transform.localScale.y*-1, transform.localScale.z);
+		//set depth
+		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+
 	}
 
 	void CreateHitUI(){
@@ -63,9 +60,10 @@ public class stone : action {
 		ui.GetComponent<Text> ().text = hits.ToString ();
 	}
 
-	void Done(){
+	void Done(GameObject obj ){
 		ui.SetActive (false);
 		transform.position = new Vector3 (10000,100000,10000);
+		obj.GetComponent<PlayerInfo> ().AddCoin (pay);
 		//StartCoroutine (comeBack());
 	}
 
@@ -86,15 +84,19 @@ public class stone : action {
 	}
 
 	public override void Run(int playerID, float distance, GameObject obj){
-		
-		if (obj.GetComponent<PlayerInfo> ().educated) {
-			hits -= 2;
-		} else {
-			hits -= 1;
-		}
+		if (distance < 1.5f) {
+			if (obj.GetComponent<PlayerInfo> ().educated) {
+				hits -= 2;
+			} else {
+				hits -= 1;
+			}
 
-		ShowHits ();
-		if (hits < 1) Done ();
+			GetComponent<AudioSource> ().PlayOneShot (audio [Random.Range (0, audio.Length)]);
+
+			ShowHits ();
+			if (hits < 1)
+				Done (obj);
+		}
 	}
 
 }

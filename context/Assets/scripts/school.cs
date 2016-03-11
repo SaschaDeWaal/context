@@ -11,13 +11,15 @@ public class school : action {
 
 	const int clicksCount = 5;
 	const float powerupTime = 40;
+	const int toPay = 3;
 
 	void Start () {
 		sr = sprite.GetComponent<SpriteRenderer> ();
 	}
 	
 	public override void Run(int playerID, float distance, GameObject obj){
-		if (!busy && !obj.GetComponent<PlayerInfo>().educated) StartCoroutine (schoolTime(obj, playerID));
+		if (!busy && !obj.GetComponent<PlayerInfo>().educated && obj.GetComponent<PlayerInfo>().coins >= toPay) StartCoroutine (schoolTime(obj, playerID));
+
 
 	}
 
@@ -57,6 +59,7 @@ public class school : action {
 		//settings things
 		player.GetComponent<movement>().enabled = false;
 		player.GetComponent<playerAction> ().enabled = false;
+		player.GetComponent<PlayerInfo> ().RemoveCoin (toPay);
 		Vector2 lastDir = Vector2.zero;
 		busy = true;
 

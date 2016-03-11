@@ -47,9 +47,13 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\PlayerInfo.cs" />
      <Compile Include="Assets\scripts\action.cs" />
+     <Compile Include="Assets\scripts\exit.cs" />
+     <Compile Include="Assets\scripts\family.cs" />
+     <Compile Include="Assets\scripts\familyScore.cs" />
      <Compile Include="Assets\scripts\movement.cs" />
      <Compile Include="Assets\scripts\playerAction.cs" />
      <Compile Include="Assets\scripts\school.cs" />
+     <Compile Include="Assets\scripts\showScore.cs" />
      <Compile Include="Assets\scripts\stone.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
