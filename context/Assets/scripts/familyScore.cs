@@ -15,6 +15,9 @@ public class familyScore : MonoBehaviour {
 	}
 	
 	void Update () {
-		text.text = famInfo.coins.ToString ();
+		string txt = famInfo.coins.ToString ();
+		if (famInfo.coins < 0)
+			txt = "dead";
+		text.text = txt;
 	}
 }

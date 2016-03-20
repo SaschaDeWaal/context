@@ -28,14 +28,15 @@ public class playerAction : MonoBehaviour {
 
 		//find closed action
 		foreach(action act in actions){
-			if (Vector2.Distance (new Vector2(transform.position.x, transform.position.y), new Vector2(act.transform.position.x, act.transform.position.y)) < distance) {
-				distance = Vector3.Distance (transform.position, act.transform.position);
+			if (act.gameObject.name != gameObject.name && Vector2.Distance (new Vector2(transform.position.x, transform.position.y), new Vector2(act.transform.position.x, act.transform.position.y)) < distance) {
+				distance = Vector2.Distance (new Vector2 (transform.position.x, transform.position.y), new Vector2 (act.transform.position.x, act.transform.position.y));
 				closedAction = act;
 			}
 		}
 
 		//doAction
 		if (closedAction != null) {
+			Debug.Log (gameObject.name + ": call action of " + closedAction.gameObject.name);
 			closedAction.Run (playerIndex, distance, gameObject);
 		}
 	}

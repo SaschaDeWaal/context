@@ -5,12 +5,15 @@ public class school : action {
 
 	public GameObject sprite;
 	public Sprite[] keys;
+	public AudioClip goodSound;
+	public AudioClip wrongSound;
+	public AudioClip powerUpSong;
 
 	private SpriteRenderer sr;
 	private bool busy = false;
 
 	const int clicksCount = 5;
-	const float powerupTime = 40;
+	const float powerupTime = 30;
 	const int toPay = 3;
 
 	void Start () {
@@ -18,8 +21,7 @@ public class school : action {
 	}
 	
 	public override void Run(int playerID, float distance, GameObject obj){
-		if (!busy && !obj.GetComponent<PlayerInfo>().educated && obj.GetComponent<PlayerInfo>().coins >= toPay) StartCoroutine (schoolTime(obj, playerID));
-
+		if (distance < 1f && !busy && !obj.GetComponent<PlayerInfo>().educated && obj.GetComponent<PlayerInfo>().coins >= toPay) StartCoroutine (schoolTime(obj, playerID));
 
 	}
 
@@ -44,7 +46,7 @@ public class school : action {
 	}
 
 	Vector2 hitKey(int playerID){
-		return new Vector2 (Input.GetAxisRaw("Horizontal Player " + playerID.ToString()), Input.GetAxisRaw("Vertical Player " + playerID.ToString()));
+		return new Vector2 (Mathf.Round( Input.GetAxis("Horizontal Player " + playerID.ToString())), Mathf.Round( Input.GetAxis("Vertical Player " + playerID.ToString())));
 	}
 
 	void stopSchool(GameObject player){
@@ -60,7 +62,9 @@ public class school : action {
 		player.GetComponent<movement>().enabled = false;
 		player.GetComponent<playerAction> ().enabled = false;
 		player.GetComponent<PlayerInfo> ().RemoveCoin (toPay);
+		player.GetComponent<coinAnimation> ().giveGoin (transform.position, toPay);
 		Vector2 lastDir = Vector2.zero;
+		Vector3 startIconPos = sprite.transform.position;
 		busy = true;
 
 		//loop
@@ -69,10 +73,24 @@ public class school : action {
 			//create data
 			Vector2 unloackKey = randomDirection (lastDir);
 			Vector2 key = hitKey (id);
+			float time = 0;
+
+			sprite.transform.position = startIconPos;
 
 			//wait until a key is presed
 			while(key == Vector2.zero){
 				key = hitKey (id);
+
+				sprite.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f, 1f-time);
+				sprite.transform.Translate (Vector3.up*Time.deltaTime*0.5f);
+				time += Time.deltaTime*0.5f;
+
+				if (time > 1f) {
+					GetComponent<AudioSource> ().PlayOneShot (wrongSound);
+					stopSchool (player);
+					yield break;
+				}
+
 				yield return null;
 			}
 
@@ -82,10 +100,12 @@ public class school : action {
 				//wait until no key is pressed
 				while(hitKey (id) != Vector2.zero) yield return null;
 				lastDir = unloackKey;
+				GetComponent<AudioSource> ().PlayOneShot (goodSound);
 
 			} else {
 
 				//stop school
+				GetComponent<AudioSource> ().PlayOneShot (wrongSound);
 				stopSchool (player);
 				yield break;
 
@@ -94,7 +114,17 @@ public class school : action {
 
 		//school done
 		stopSchool (player);
+		sprite.transform.position = startIconPos;
 		player.GetComponent<PlayerInfo> ().educated = true;
+		AudioSource audio = GetComponent<AudioSource> ();
+		Camera.main.GetComponent<AudioSource> ().Pause ();
+		audio.PlayOneShot (powerUpSong);
+
+		while (audio.isPlaying) {
+			yield return null;
+		}
+
+		Camera.main.GetComponent<AudioSource> ().Play ();
 
 		//power up done
 		yield return new WaitForSeconds (powerupTime);

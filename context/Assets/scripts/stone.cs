@@ -10,6 +10,7 @@ public class stone : action {
 
 	private bool createdObject = false;
 	private Vector3 orginalPos;
+	private GameObject uiRef;
 
 	const int minHitRange = 10;
 	const int maxHitRange = 40;
@@ -17,9 +18,6 @@ public class stone : action {
 
 	void Start () {
 
-		//set things
-		orginalPos = transform.position;
-		
 		//random hits
 		hits = Random.Range (minHitRange, maxHitRange);
 
@@ -30,17 +28,20 @@ public class stone : action {
 		//set depth
 		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
 
+		//set things
+		orginalPos = transform.position;
+
 	}
 
 	void CreateHitUI(){
 		
 		//create object
 		GameObject canvas = GameObject.FindGameObjectWithTag ("canvas");
-		ui = Instantiate (ui, canvas.transform.position, canvas.transform.rotation) as GameObject;
-		ui.transform.SetParent (canvas.transform);
+		uiRef = Instantiate (ui, canvas.transform.position, canvas.transform.rotation) as GameObject;
+		uiRef.transform.SetParent (canvas.transform);
 
 		//reset position
-		RectTransform rectTransform = ui.GetComponent<RectTransform> ();
+		RectTransform rectTransform = uiRef.GetComponent<RectTransform> ();
 		rectTransform.offsetMin = Vector2.zero;
 		rectTransform.offsetMax = Vector2.zero;
 
@@ -57,23 +58,25 @@ public class stone : action {
 			createdObject = true;
 		}
 
-		ui.GetComponent<Text> ().text = hits.ToString ();
+		uiRef.GetComponent<Text> ().text = hits.ToString ();
 	}
 
 	void Done(GameObject obj ){
-		ui.SetActive (false);
-		transform.position = new Vector3 (10000,100000,10000);
+		Destroy (uiRef);
 		obj.GetComponent<PlayerInfo> ().AddCoin (pay);
-		//StartCoroutine (comeBack());
+		obj.GetComponent<coinAnimation> ().removedStone (transform.position);
+		transform.position = new Vector3 (10000,100000,10000);
+		StartCoroutine (comeBack());
 	}
 
 	IEnumerator comeBack(){
-		yield return new WaitForSeconds (Random.Range(10, 30));
+		yield return new WaitForSeconds (Random.Range(8, 20));
 
 		SpriteRenderer sr = GetComponent<SpriteRenderer> ();
 		transform.position = orginalPos;
 		float alpha = 0;
-		//hits = Random.Range (minHitRange, maxHitRange);
+		hits = Random.Range (minHitRange, maxHitRange);
+		createdObject = false;
 
 		while (alpha < 1f) {
 			sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, alpha);
