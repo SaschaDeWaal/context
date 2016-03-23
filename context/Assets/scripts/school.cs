@@ -8,6 +8,7 @@ public class school : action {
 	public AudioClip goodSound;
 	public AudioClip wrongSound;
 	public AudioClip powerUpSong;
+	public GameObject schoolTextCloud;
 
 	private SpriteRenderer sr;
 	private bool busy = false;
@@ -21,7 +22,13 @@ public class school : action {
 	}
 	
 	public override void Run(int playerID, float distance, GameObject obj){
-		if (distance < 1f && !busy && !obj.GetComponent<PlayerInfo>().educated && obj.GetComponent<PlayerInfo>().coins >= toPay) StartCoroutine (schoolTime(obj, playerID));
+		if (distance < 1f && !busy && !obj.GetComponent<PlayerInfo> ().educated) {
+			if (obj.GetComponent<PlayerInfo> ().coins >= toPay){
+				StartCoroutine (schoolTime (obj, playerID));
+			}else{
+				schoolTextCloud.GetComponent<schoolCloud>().NotEnoughMoney();
+			}
+		}
 
 	}
 

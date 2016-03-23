@@ -53,10 +53,12 @@
      <Compile Include="Assets\scripts\endGame.cs" />
      <Compile Include="Assets\scripts\ensScreen.cs" />
      <Compile Include="Assets\scripts\exit.cs" />
+     <Compile Include="Assets\scripts\exitMenu.cs" />
      <Compile Include="Assets\scripts\fabricCloud.cs" />
      <Compile Include="Assets\scripts\family.cs" />
      <Compile Include="Assets\scripts\familyScore.cs" />
      <Compile Include="Assets\scripts\menu.cs" />
+     <Compile Include="Assets\scripts\menuButton.cs" />
      <Compile Include="Assets\scripts\movement.cs" />
      <Compile Include="Assets\scripts\playerAction.cs" />
      <Compile Include="Assets\scripts\pushed.cs" />

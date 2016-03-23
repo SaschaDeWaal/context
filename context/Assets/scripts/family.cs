@@ -6,11 +6,36 @@ public class family : action {
 	public int player;
 	public int coins = 15;
 	public GameObject coinObjet;
+	public GameObject scoreHud;
 
 	const float spendTime = 9;
-	const float minDis = 2f;
+	const float minDis = 4f;
 
 	void Start(){
+		StartCoroutine (startGame());
+	}
+
+	IEnumerator startGame(){
+		scoreHud.SetActive (false);
+		Vector3 startPos = transform.position;
+		float dir = 1f;
+		if (player == 2)
+			dir = -1;
+		transform.position = new Vector3 (startPos.x-(2*dir), startPos.y, startPos.z);
+
+		yield return new WaitForSeconds (1f);
+
+		scoreHud.SetActive (true);
+
+		while (Vector3.Distance(transform.position, startPos) > 0.03f) {
+			transform.position = Vector3.Lerp (transform.position, startPos, Time.deltaTime*5f);
+
+			yield return null;
+		}
+
+
+		transform.position = startPos;
+
 		StartCoroutine (loop());
 	}
 
@@ -28,6 +53,7 @@ public class family : action {
 	}
 
 	IEnumerator coinAnimation(){
+		
 		GameObject coin = Instantiate (coinObjet) as GameObject;
 		coin.transform.position = transform.position;
 		coin.transform.localScale = new Vector3 (0.05f, 0.05f, 0.05f);
@@ -55,6 +81,7 @@ public class family : action {
 			if (obj.GetComponent<PlayerInfo> ().coins > 0) {
 				obj.GetComponent<PlayerInfo> ().RemoveCoin (1);
 				obj.GetComponent<coinAnimation> ().giveGoin (transform.position);
+				GetComponent<AudioSource> ().Play ();
 				coins++;
 			}
 		}

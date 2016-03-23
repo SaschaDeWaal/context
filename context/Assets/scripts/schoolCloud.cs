@@ -9,11 +9,10 @@ public class schoolCloud : MonoBehaviour {
 	public GameObject player1;
 	public GameObject player2;
 
-	public string[] sentences;
+	public GameObject[] textObjects;
 
 	private float xMultt = 1f;
 	private Image render;
-	private Text text;
 	private PlayerInfo info1;
 	private PlayerInfo info2;
 	private bool showText = false;
@@ -25,15 +24,28 @@ public class schoolCloud : MonoBehaviour {
 	const int minCoint = 1;
 	const float showTime = 5;
 
+	void disableAllText(){
+		for (int i = 0; i < textObjects.Length; i++) {
+			textObjects [i].SetActive (false);
+		}
+	}
+
+	GameObject setText(){
+		disableAllText ();
+		GameObject ret = textObjects [Random.Range (0, textObjects.Length)];
+		ret.SetActive (true);
+
+		return ret;
+	}
+
 	void Start () {
 		render = GetComponent<Image> ();
-		text = transform.GetChild (0).GetComponent<Text> ();
 		info1 = player1.GetComponent<PlayerInfo> ();
 		info2 = player2.GetComponent<PlayerInfo> ();
 		audio = GetComponent<AudioSource> ();
 
 		render.enabled = false;
-		text.text = "";
+		disableAllText ();
 
 	}
 	
@@ -60,14 +72,23 @@ public class schoolCloud : MonoBehaviour {
 		}
 	}
 
-	IEnumerator cloudLoop(int player){
+	public void NotEnoughMoney(){
+		StartCoroutine (cloudLoop(0,2));
+	}
+
+	IEnumerator cloudLoop(int player, int forceID = -1){
 
 		//prepare
 		showText = true;
 		render.enabled = true;
 		render.color = new Color (1f, 1f, 1f, 0f);
-		text.color = new Color (text.color.r, text.color.g, text.color.b, 0f);
-		text.text = sentences[player];
+		disableAllText ();
+		GameObject textObj = null;
+		if (forceID == -1) textObj = textObjects[player];
+		if (forceID != -1) textObj = textObjects [forceID];
+		textObj.SetActive (true);
+		Image textImage = textObj.GetComponent<Image> ();
+		textImage.color = new Color (1f, 1f, 1f, 0f);
 		float time = 0f;
 		Vector3 startPos = render.transform.position;
 		audio.Play ();
@@ -76,9 +97,9 @@ public class schoolCloud : MonoBehaviour {
 		while (time < 1f) {
 
 			render.color = new Color (1f, 1f, 1f, time);
-			text.color = new Color (text.color.r, text.color.g, text.color.b, time);
+			textImage.color = new Color (1f, 1f, 1f, time);
 
-			render.transform.position = startPos + new Vector3 (((1f-time)*-150)*xMultt,(1f-time)*-50,0);
+			render.transform.position = startPos + new Vector3 (((1f-time)*-50)*xMultt,(1f-time)*-50,0);
 			render.transform.localScale = new Vector3 (time, time, time);
 
 			time += Time.deltaTime*6;
@@ -87,7 +108,7 @@ public class schoolCloud : MonoBehaviour {
 
 		//make sure size and position is correct
 		render.color = new Color (1f, 1f, 1f, 1f);
-		text.color = new Color (text.color.r, text.color.g, text.color.b, 1f);
+		textImage.color = new Color (1f, 1f, 1f, 1f);
 		render.transform.position = startPos;
 		render.transform.localScale = new Vector3 (1, 1, 1);
 		time = 1f;
@@ -99,8 +120,8 @@ public class schoolCloud : MonoBehaviour {
 		while (time > 0f) {
 
 			render.color = new Color (1f, 1f, 1f, time);
-			text.color = new Color (text.color.r, text.color.g, text.color.b, time);
-			render.transform.position = startPos + new Vector3 (((1f-time)*-150)*xMultt,(1f-time)*-50,0);
+			textImage.color = new Color (1f, 1f, 1f, time);
+			render.transform.position = startPos + new Vector3 (((1f-time)*-50)*xMultt,(1f-time)*-50,0);
 			render.transform.localScale = new Vector3 (time, time, time);
 
 			time -= Time.deltaTime*6;
@@ -111,7 +132,7 @@ public class schoolCloud : MonoBehaviour {
 		//done
 		showText = false;
 		render.enabled = false;
-		text.text = "";
+		disableAllText ();
 		render.transform.position = startPos;
 
 

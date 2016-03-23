@@ -28,8 +28,8 @@ public class playerAction : MonoBehaviour {
 
 		//find closed action
 		foreach(action act in actions){
-			if (act.gameObject.name != gameObject.name && Vector2.Distance (new Vector2(transform.position.x, transform.position.y), new Vector2(act.transform.position.x, act.transform.position.y)) < distance) {
-				distance = Vector2.Distance (new Vector2 (transform.position.x, transform.position.y), new Vector2 (act.transform.position.x, act.transform.position.y));
+			if (act.gameObject.name != gameObject.name && Vector2.Distance (new Vector2(transform.position.x, transform.position.y-0.5f), new Vector2(act.transform.position.x, act.transform.position.y)) < distance) {
+				distance = Vector2.Distance (new Vector2 (transform.position.x, transform.position.y-0.5f), new Vector2 (act.transform.position.x, act.transform.position.y));
 				closedAction = act;
 			}
 		}

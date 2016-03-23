@@ -24,7 +24,7 @@ public class fabricCloud : MonoBehaviour {
 
 		if (transform.position.y > 5.1f) {
 			transform.position = startPos;
-			transform.localScale = new Vector3 (Random.Range (0.2f, 0.3f), transform.localScale.y, transform.localScale.z);
+			transform.localScale = new Vector3 (Random.Range (0.1f, 0.5f), transform.localScale.y, transform.localScale.z);
 		}
 	}
 

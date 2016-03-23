@@ -1,10 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\ensScreen.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\exitMenu.cs">
     <Files>
-      <File FileName="Assets\scripts\movement.cs" Line="31" Column="1" />
-      <File FileName="Assets\scripts\school.cs" Line="48" Column="31" />
+      <File FileName="Assets\scripts\playerAction.cs" Line="31" Column="123" />
+      <File FileName="Assets\scripts\pushed.cs" Line="56" Column="43" />
+      <File FileName="Assets\scripts\movement.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\school.cs" Line="1" Column="1" />
       <File FileName="Assets\scripts\ensScreen.cs" Line="24" Column="3" />
+      <File FileName="Assets\scripts\menuButton.cs" Line="8" Column="2" />
+      <File FileName="Assets\scripts\menu.cs" Line="2" Column="34" />
+      <File FileName="Assets\scripts\exit.cs" Line="6" Column="7" />
+      <File FileName="Assets\scripts\exitMenu.cs" Line="20" Column="50" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

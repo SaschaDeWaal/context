@@ -7,10 +7,9 @@ public class textCloud : MonoBehaviour {
 	public GameObject fam;
 	public float xMultt = 1f;
 
-	public string[] sentences;
+	public GameObject[] textObjects;
 
 	private Image render;
-	private Text text;
 	private family info;
 	private bool showText = false;
 	private AudioSource audio = null;
@@ -20,12 +19,25 @@ public class textCloud : MonoBehaviour {
 
 	void Start () {
 		render = GetComponent<Image> ();
-		text = transform.GetChild (0).GetComponent<Text> ();
 		info = fam.GetComponent<family> ();
 		audio = GetComponent<AudioSource> ();
 
 		render.enabled = false;
-		text.text = "";
+		disableAllText ();
+	}
+
+	void disableAllText(){
+		for (int i = 0; i < textObjects.Length; i++) {
+			textObjects [i].SetActive (false);
+		}
+	}
+
+	GameObject setText(){
+		disableAllText ();
+		GameObject ret = textObjects [Random.Range (0, textObjects.Length)];
+		ret.SetActive (true);
+
+		return ret;
 	}
 
 
@@ -35,8 +47,10 @@ public class textCloud : MonoBehaviour {
 		showText = true;
 		render.enabled = true;
 		render.color = new Color (1f, 1f, 1f, 0f);
-		text.color = new Color (text.color.r, text.color.g, text.color.b, 0f);
-		text.text = sentences[Random.Range(0, sentences.Length)];
+		GameObject tekst = setText();
+		Image textImage = tekst.GetComponent<Image> ();
+		textImage.color = new Color (1f, 1f, 1f, 0f); 
+
 		float time = 0f;
 		Vector3 startPos = render.transform.position;
 		audio.Play ();
@@ -45,10 +59,10 @@ public class textCloud : MonoBehaviour {
 		while (time < 1f) {
 
 			render.color = new Color (1f, 1f, 1f, time);
-			text.color = new Color (text.color.r, text.color.g, text.color.b, time);
+			textImage.color = new Color (1f, 1f, 1f, time);
 
-			render.transform.position = startPos + new Vector3 (((1f-time)*-150)*xMultt,(1f-time)*-50,0);
-			render.transform.localScale = new Vector3 (time, time, time);
+			render.transform.position = startPos + new Vector3 (((1f-time)*-50)*xMultt,(1f-time)*-50,0);
+			render.transform.localScale = new Vector3 (time*xMultt, time, time);
 
 			time += Time.deltaTime*6;
 			yield return null;
@@ -56,9 +70,9 @@ public class textCloud : MonoBehaviour {
 
 		//make sure size and position is correct
 		render.color = new Color (1f, 1f, 1f, 1f);
-		text.color = new Color (text.color.r, text.color.g, text.color.b, 1f);
+		textImage.color = new Color (1f, 1f, 1f, 1f);
 		render.transform.position = startPos;
-		render.transform.localScale = new Vector3 (1, 1, 1);
+		render.transform.localScale = new Vector3 (1*xMultt, 1, 1);
 		time = 1f;
 
 		//wait for a ammount of time
@@ -68,9 +82,9 @@ public class textCloud : MonoBehaviour {
 		while (time > 0f) {
 
 			render.color = new Color (1f, 1f, 1f, time);
-			text.color = new Color (text.color.r, text.color.g, text.color.b, time);
-			render.transform.position = startPos + new Vector3 (((1f-time)*-150)*xMultt,(1f-time)*-50,0);
-			render.transform.localScale = new Vector3 (time, time, time);
+			textImage.color = new Color (1f, 1f, 1f, time);
+			render.transform.position = startPos + new Vector3 (((1f-time)*-50)*xMultt,(1f-time)*-50,0);
+			render.transform.localScale = new Vector3 (time*xMultt, time, time);
 
 			time -= Time.deltaTime*6;
 			yield return null;
@@ -80,7 +94,6 @@ public class textCloud : MonoBehaviour {
 		//done
 		showText = false;
 		render.enabled = false;
-		text.text = "";
 		render.transform.position = startPos;
 
 

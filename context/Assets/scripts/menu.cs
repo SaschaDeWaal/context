@@ -6,9 +6,9 @@ public class menu : MonoBehaviour {
 
 
 	void Update () {
-		if (Input.anyKeyDown) {
+		/*if (Input.anyKeyDown) {
 			Scene scene = SceneManager.GetActiveScene(); 
 			SceneManager.LoadScene("game");
-		}
+		}*/
 	}
 }

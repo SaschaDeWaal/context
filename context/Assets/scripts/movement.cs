@@ -7,14 +7,20 @@ public class movement : MonoBehaviour {
 
 	public Sprite back;
 	public Sprite front;
+	public Sprite left;
 
 	public animationManager rightWalk;
+	public animationManager backWalk;
+	public animationManager frontWalk;
+	public animationManager hitAnimation;
+	public animationManager pushAnimation;
 
 	private Vector3 size;
 	private Vector2 lastDir = new Vector2 (0, 0);
 	private Vector2 blockDir = new Vector2 (0, 0);
 	private SpriteRenderer sr;
 	private GameObject lastHitObj = null;
+	private int lastWalkDir = 4;
 
 	const float speed = 4;
 
@@ -29,6 +35,11 @@ public class movement : MonoBehaviour {
 		move ();
 
 
+	}
+		
+
+	public void onEndPush(){
+		blockDir = new Vector2 (0, 0);
 	}
 
 	void move(){
@@ -63,23 +74,36 @@ public class movement : MonoBehaviour {
 			blockDir = new Vector2 (0, 0);
 
 			//sprite
-			setAnimation (2);
-			if (lastDir.y == 1)
-				sr.sprite = back;
-			if (lastDir.y == -1)
-				sr.sprite = front;
-			if (lastDir.x == 1)
+			if (lastDir.y > 0.1f) {
+				setAnimation (3);
+			} else if (lastDir.y < -0.1f) {
+				setAnimation (4);
+			} else if (lastDir.x > 0.1f) {
 				setAnimation (0);
-			if (lastDir.x == -1)
+			} else if (lastDir.x < -0.1f) {
 				setAnimation (1);
+			} else {
+				setAnimation (2);
+			}
 		} else {
 			setAnimation (2);
+		}
+
+
+		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, -8, 8), Mathf.Clamp (transform.position.y, -4.4f, 4.4f), transform.position.y - 0.5f);
+	}
+
+	public bool Dir{
+		get{
+			return (lastWalkDir == 0);
 		}
 	}
 
 
 	void setAnimation(int id){
 		rightWalk.enabled = false;
+		backWalk.enabled = false;
+		frontWalk.enabled = false;
 
 		if (id == 0) {
 			rightWalk.enabled = true;
@@ -91,9 +115,30 @@ public class movement : MonoBehaviour {
 			rightWalk.flipAnimation = true;
 		}
 
-		if (id == 2) {
-			
+		if (id == 3) {
+			backWalk.enabled = true;
 		}
+
+		if (id == 4) {
+			frontWalk.enabled = true;
+		}
+
+		if (id == 2) {
+			if (lastWalkDir == 3) sr.sprite = back;
+			if (lastWalkDir == 4) sr.sprite = front;
+			if (lastWalkDir == 0) {
+				sr.sprite = left;
+				sr.flipX = false;
+			}
+			if (lastWalkDir == 1) {
+				sr.sprite = left;
+				sr.flipX = true;
+			}
+
+		} else {
+			lastWalkDir = id;
+		}
+
 	}
 
 	void OnCollisionEnter2D(Collision2D col){
